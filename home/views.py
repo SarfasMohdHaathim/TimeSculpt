@@ -36,3 +36,24 @@ class WatchDetailView(TemplateView):
         context['related_products'] = related_products
         print(related_products)
         return context
+    
+
+
+class WatchView(TemplateView):
+    template_name = 'shop.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        gender = self.request.GET.get('gender')
+        brands = self.request.GET.getlist('brand')
+
+        watches = Watch.objects.all()
+        if gender:
+            watches = watches.filter(gender=gender)
+        if brands:
+            watches = watches.filter(brands__in=brands)
+        context['product'] = watches
+        print(gender,'------------------------------------------------')
+        context['GENDER_CHOICES'] = Watch.GENDER_CHOICES 
+        context['BRAND_CHOICES'] = Watch.BRAND_CHOICES 
+        return context

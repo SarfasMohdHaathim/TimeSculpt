@@ -140,8 +140,8 @@
 
               <div class="pc__info position-relative">
                 <p class="pc__category">{{product.brands}} &amp; {{product.gender}}</p>
-                <h6 class="pc__title"><a href="product1_simple.html">{{product.watch_name}}</a></h6>
-                <h6 class="pc__title"><a href="product1_simple.html">{{product.dial_type}}|{{product.dial_shape}}|{{product.style}}|{{product.brands}}</a></h6>
+                <h6 class="pc__title"><a href="{% url 'watch_detail' watch_id=product.id watch_name=product.watch_name %}">{{product.watch_name}}</a></h6>
+                <h6 class="pc__title"><a href="{% url 'watch_detail' watch_id=product.id watch_name=product.watch_name %}">{{product.dial_type}}|{{product.dial_shape}}|{{product.style}}|{{product.brands}}</a></h6>
 
                 <div class="product-card__price d-flex mb-2">
                   <span class="money price fs-5">${{product.actual_price}}</span>

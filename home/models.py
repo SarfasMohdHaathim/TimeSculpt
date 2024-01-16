@@ -8,34 +8,18 @@ class Watch(models.Model):
     ]
 
     BRAND_CHOICES = [
-        ('Amazfit', 'Amazfit'),
-        ('Anne Klein', 'Anne Klein'),
         ('Armani Exchange', 'Armani Exchange'),
         ('Calvin Klein', 'Calvin Klein'),
         ('Casio', 'Casio'),
-        ('Coach', 'Coach'),
-        ('Daniel Wellington', 'Daniel Wellington'),
-        ('Diesel', 'Diesel'),
-        ('Emporio Armani', 'Emporio Armani'),
-        ('Fitbit', 'Fitbit'),
         ('Fossil', 'Fossil'),
-        ('Fossil Smartwatch', 'Fossil Smartwatch'),
         ('G-Shock', 'G-Shock'),
-        ('GC', 'GC'),
-        ('Guess', 'Guess'),
         ('Hugo Boss', 'Hugo Boss'),
         ('Kenneth Cole', 'Kenneth Cole'),
-        ('Michael Kors', 'Michael Kors'),
         ('Movado', 'Movado'),
         ('Obaku', 'Obaku'),
-        ('Olivia Burton', 'Olivia Burton'),
         ('Police', 'Police'),
-        ('Skagen', 'Skagen'),
         ('Titan', 'Titan'),
-        ('Titan Smart', 'Titan Smart'),
         ('Tommy Hilfiger', 'Tommy Hilfiger'),
-        ('Versace', 'Versace'),
-        ('Xylys', 'Xylys'),
     ]
 
     STYLE_CHOICES = [
@@ -62,23 +46,13 @@ class Watch(models.Model):
         ('Nylon', 'Nylon'),
         ('PU', 'PU'),
         ('Plastic', 'Plastic'),
-        ('Polyurethane', 'Polyurethane'),
-        ('Polyvinyl Chloride', 'Polyvinyl Chloride'),
-        ('Pvc', 'Pvc'),
-        ('Resin', 'Resin'),
         ('Rubber', 'Rubber'),
         ('Silicon', 'Silicon'),
-        ('Silicone', 'Silicone'),
-        ('Stainless Steel', 'Stainless Steel'),
-        ('Stainless Steel & Ceramic', 'Stainless Steel & Ceramic'),
-        ('Stainless Steel Mesh Band', 'Stainless Steel Mesh Band'),
         ('Textile', 'Textile'),
-        ('mesh', 'Mesh'),
     ]
 
     DIAL_TYPE_CHOICES = [
         ('Analog', 'Analog'),
-        ('Analog & Digital', 'Analog & Digital'),
         ('Digital', 'Digital'),
         ('Roman', 'Roman'),
         ('Smart', 'Smart'),
@@ -93,14 +67,12 @@ class Watch(models.Model):
     ]
 
     DIAL_SHAPE_CHOICES = [
-        ('Octagonal', 'Octagonal'),
         ('Oval', 'Oval'),
         ('Polygon', 'Polygon'),
         ('Rectangle', 'Rectangle'),
         ('Rectangular', 'Rectangular'),
         ('Round', 'Round'),
         ('Square', 'Square'),
-        ('Tonneau', 'Tonneau'),
         ('Triangle', 'Triangle'),
     ]
 

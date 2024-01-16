@@ -2,6 +2,10 @@
 {% load static %}
 
 {% block main %}
+<div class="popup-container" id="popup">
+  <p>Tommy Hilfiger Formal Men product Added Successfully.</p>&nbsp;&nbsp;&nbsp;
+  <span class="close-btn" onclick="closePopup()">&times;</span>
+</div>
 
   <main>
     <div class="mb-md-1 pb-md-3"></div>
@@ -13,20 +17,20 @@
               <div class="swiper-container">
                 <div class="swiper-wrapper">
                   <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="{{product.watch_thumbnail.url}}" width="674" height="674" alt="">
-                    <a data-fancybox="gallery" href="{{product.watch_thumbnail.url}}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
+                    <img loading="lazy" class="h-auto" src="{{watch.watch_thumbnail.url}}" width="674" height="674" alt="">
+                    <a data-fancybox="gallery" href="{{watch.watch_thumbnail.url}}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_zoom" /></svg>
                     </a>
                   </div>
                   <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="{{product.watch_thumbnail.url}}" width="674" height="674" alt="">
-                    <a data-fancybox="gallery" href="{{product.watch_thumbnail.url}}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
+                    <img loading="lazy" class="h-auto" src="{{watch.watch_thumbnail.url}}" width="674" height="674" alt="">
+                    <a data-fancybox="gallery" href="{{watch.watch_thumbnail.url}}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_zoom" /></svg>
                     </a>
                   </div>
                   <div class="swiper-slide product-single__image-item">
-                    <img loading="lazy" class="h-auto" src="{{product.watch_thumbnail.url}}" width="674" height="674" alt="">
-                    <a data-fancybox="gallery" href="{{product.watch_thumbnail.url}}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
+                    <img loading="lazy" class="h-auto" src="{{watch.watch_thumbnail.url}}" width="674" height="674" alt="">
+                    <a data-fancybox="gallery" href="{{watch.watch_thumbnail.url}}" data-bs-toggle="tooltip" data-bs-placement="left" title="Zoom">
                       <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_zoom" /></svg>
                     </a>
                   </div>
@@ -38,10 +42,9 @@
             <div class="product-single__thumbnail">
               <div class="swiper-container">
                 <div class="swiper-wrapper">
-                  <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="{{product.watch_thumbnail.url}}" width="104" height="104" alt=""></div>
-                  <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="{{product.watch_thumbnail.url}}" width="104" height="104" alt=""></div>
-                  <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="{{product.watch_thumbnail.url}}" width="104" height="104" alt=""></div>
-                  <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="../images/products/product_0-3.jpg" width="104" height="104" alt=""></div>
+                  <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="{{watch.watch_thumbnail.url}}" width="104" height="104" alt=""></div>
+                  <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="{{watch.watch_thumbnail.url}}" width="104" height="104" alt=""></div>
+                  <div class="swiper-slide product-single__image-item"><img loading="lazy" class="h-auto" src="{{watch.watch_thumbnail.url}}" width="104" height="104" alt=""></div>
                 </div>
               </div>
             </div>
@@ -274,5 +277,12 @@
   </main>
 
   <div class="mb-5 pb-xl-5"></div>
+
+  <script>
+    function closePopup() {
+      document.getElementById('popup').style.display = 'none';
+      document.getElementById('overlay').style.display = 'none';
+    }
+  </script>
 
 {% endblock main %}

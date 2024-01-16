@@ -15543,3 +15543,42 @@ body.coming-soon-page {
 /*# sourceMappingURL=style.css.map */
 
 
+    .popup-container {
+      display: flex;
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      padding: 20px;
+      background-color: #4CAF50;
+      color: #fff; 
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+      z-index: 1000;
+    }
+
+    .popup-container p, span {
+      margin: 0;
+      font-size: large;
+    }
+
+    .close-btn {
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .checkbox-group {
+      display: flex;
+      flex-direction: column;
+      margin: 10px 0;
+    }
+
+    .checkbox-group label {
+      margin-right: 25px;
+      display: flex;
+      align-items: center;
+      font-size: large;
+      margin-top: 10px;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+      margin-right: 5px;
+    }
