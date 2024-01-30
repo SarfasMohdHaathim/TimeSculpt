@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+
 
 class Watch(models.Model):
     GENDER_CHOICES = [
@@ -50,14 +52,12 @@ class Watch(models.Model):
         ('Silicon', 'Silicon'),
         ('Textile', 'Textile'),
     ]
-
     DIAL_TYPE_CHOICES = [
         ('Analog', 'Analog'),
         ('Digital', 'Digital'),
         ('Roman', 'Roman'),
         ('Smart', 'Smart'),
     ]
-
     DIAL_COLOUR_CHOICES = [
         ('Black', 'Black'),
         ('Blue', 'Blue'),
@@ -65,7 +65,6 @@ class Watch(models.Model):
         ('Pink', 'Pink'),
         ('White', 'White'),
     ]
-
     DIAL_SHAPE_CHOICES = [
         ('Oval', 'Oval'),
         ('Polygon', 'Polygon'),
@@ -75,7 +74,6 @@ class Watch(models.Model):
         ('Square', 'Square'),
         ('Triangle', 'Triangle'),
     ]
-
     watch_name = models.CharField(max_length=100,blank=True,null=True)
     watch_thumbnail = models.ImageField(upload_to='watch_thumbnails/',blank=True,null=True)
     brands = models.CharField(max_length=30, choices=BRAND_CHOICES,blank=True,null=True)
@@ -92,5 +90,44 @@ class Watch(models.Model):
     def actual_price(self):
         return self.price - (self.price * self.discount / 100)
 
+    def discounted_price(self):
+        return  (self.price * self.discount / 100)
+
     def __str__(self):
         return self.watch_name
+
+
+
+class Cart(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
+    watch_name = models.ForeignKey(Watch, on_delete=models.SET_NULL,null=True)
+    def __str__(self):
+        return self.watch_name.watch_name
+
+class Address(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    country = models.CharField(max_length=255, null=True, blank=True)
+    street_address = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=255, null=True, blank=True)
+    zipcode = models.CharField(max_length=255, null=True, blank=True)
+    phone = models.CharField(max_length=255, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.user.username}'s Address"
+
+
+class Payment(models.Model):
+    user=models.ForeignKey(User ,on_delete=models.CASCADE)
+    amount=models.FloatField()
+    razorpay_order_id=models.CharField(max_length=100,blank=True,null=True)
+    razorpay_payment_status=models.CharField(max_length=100,blank=True,null=True)
+    razorpay_payment_id=models.CharField(max_length=100,blank=True,null=True)
+    paid=models.BooleanField(default=False)
+
+
+
+class OrderPlaced(models.Model):
+    user=models.ForeignKey(User ,on_delete=models.CASCADE)
+    product=models.ForeignKey(Watch ,on_delete=models.CASCADE)
+    ordered_date=models.DateField(auto_now_add=True)
+    payment=models.ForeignKey(Payment,on_delete=models.CASCADE,default="")

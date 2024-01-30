@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block main %}
+  <main>
+    <div class="mb-4 pb-4"></div>
+    <section class="shop-checkout container">
+      <h2 class="page-title">Checkout</h2>
+      <div class="checkout-steps">
+        <a href="shop_cart.html" class="checkout-steps__item active">
+          <span class="checkout-steps__item-number">01</span>
+          <span class="checkout-steps__item-title">
+            <span>Shopping Bag</span>
+            <em>Manage Your Items List</em>
+          </span>
+        </a>
+        <a href="shop_checkout.html" class="checkout-steps__item active">
+          <span class="checkout-steps__item-number">02</span>
+          <span class="checkout-steps__item-title">
+            <span>Checkout</span>
+            <em>Checkout Your Items List</em>
+          </span>
+        </a>
+        <a href="shop_order_complete.html" class="checkout-steps__item">
+          <span class="checkout-steps__item-number">03</span>
+          <span class="checkout-steps__item-title">
+            <span>Confirmation</span>
+            <em>Review And Submit Your Order</em>
+          </span>
+        </a>
+      </div>
+        <div class="checkout-form">
+          <div class="billing-info__wrapper">
+            <div class="row">
+              <div class="col-md-6">
+                <h4>SHIPPING ADDRESS DETAILS</h4>
+                <div class="page-content my-account__address">
+                  <p class="notice">The following addresses will be used on the checkout page by default.</p>
+                  <div class="my-account__address-list">
+                    <div class="my-account__address-item">
+                      <div class="my-account__address-item__title">
+                        <h5>Shipping Address</h5>
+                        <a href="#">Edit</a>
+                      </div>
+                      <div class="my-account__address-item__detail">
+                        <p>{{first_name}} {{last_name}}</p>
+                        <p>{{address.country}} {{address.street_address}} </p>
+                        <p>{{address.city}} Zip {{address.zipcode}}</p>
+                        <br>
+                        <p>{{address.phone}}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="checkout__totals-wrapper">
+            <div class="sticky-content">
+              <div class="checkout__totals">
+                <h3>Your Order</h3>
+                <table class="checkout-cart-items">
+                  <thead>
+                    <tr>
+                      <th>PRODUCT</th>
+                      <th>SUBTOTAL</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for cart in cart %}
+                    <tr>
+                      <td>
+                        {{cart.watch_name.watch_name}} {{cart.watch_name.style}}
+                      </td>
+                      <td>
+                        ${{cart.watch_name.price}}
+                      </td>
+                    </tr>
+                    {%endfor%}
+                   
+                  </tbody>
+                </table>
+                <table class="checkout-totals">
+                  <tbody>
+                    <tr>
+                      <th>SUBTOTAL</th>
+                      <td>${{pamount}}</td>
+                    </tr>
+                    <tr>
+                      <th>DISCOUNT</th>
+                      <td>{{damount}}</td>
+                    </tr>
+                    <tr>
+                      <th>TOTAL</th>
+                      <td>${{famount}}</td>
+                    </tr>
+                    <tr>
+                    </tr>
+                  </tbody>
+                </table>
+                <div class="pay-btn">
+                {% if payment %}
+                <form action="{% url 'payment_done' %}" method="POST">
+                  <script
+                    src="https://checkout.razorpay.com/v1/checkout.js"
+                    data-key="rzp_test_wcSyrPoEa0dNYb" 
+                    data-amount="{{razoramount}}" 
+                    data-currency="INR"
+                    data-order_id="{{ payment.razorpay_order_id }}"
+                    data-name="Sarfas MOHD"
+                    data-description="Django and Data Science"
+                    data-image="https://example.com/your_logo.jpg"
+                    data-prefill.name="PC"
+                    data-prefill.email="{{email}}"
+                    data-theme.color="#F37254"
+                  ></script>
+                  <input type="hidden" name="user" value="{{current_user}}">
+                </form>
+                  {% endif %}	
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+    </section>
+  </main>
+
+  <div class="mb-5 pb-xl-5"></div>
+  
+
+ 
+{% endblock main %}

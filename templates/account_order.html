@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<main>
+    <div class="mb-4 pb-4"></div>
+    <section class="my-account container">
+      <h2 class="page-title">Orders</h2>
+      <div class="row">
+        <div class="col-lg-3">
+          <ul class="account-nav">
+            <li><a href="account_dashboard.html" class="menu-link menu-link_us-s">Dashboard</a></li>
+            <li><a href="account_orders.html" class="menu-link menu-link_us-s menu-link_active">Orders</a></li>
+            <li><a href="account_edit_address.html" class="menu-link menu-link_us-s">Addresses</a></li>
+            <li><a href="account_edit.html" class="menu-link menu-link_us-s">Account Details</a></li>
+            <li><a href="account_wishlist.html" class="menu-link menu-link_us-s">Wishlist</a></li>
+            <li><a href="login_register.html" class="menu-link menu-link_us-s">Logout</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-9">
+          <div class="page-content my-account__orders-list">
+            <table class="orders-table">
+              <thead>
+                <tr>
+                  <th>Product Name</th>
+                  <th>Price</th>
+                  <th>Discount Added</th>
+                  <th>Ordered Date</th>
+                  
+                </tr>
+              </thead>
+              <tbody>
+                {% for order in orders %}
+                <tr>
+                  <td>{{ order.product.watch_name }}</td>
+                  <td>${{ order.product.actual_price }}</td>
+                  <td>${{ order.product.discounted_price }}</td>
+                  <td>{{ order.ordered_date }}</td>
+                </tr>
+                {% endfor %}
+                <tr>
+                  <th style="text-align: center;">Payment</th>
+                  <td style="text-align: center;">{{total}} paid successfully</td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="mb-5 pb-xl-5"></div>
+  
+
+  {% endblock main %}

@@ -1,4 +1,5 @@
 {%load static %}
+{% load socialaccount %}
 <!DOCTYPE html>
 <html dir="ltr" lang="zxx">
 <head>
@@ -16,6 +17,7 @@
   <!-- Stylesheets -->
   <link rel="stylesheet" href="{% static 'css/plugins/swiper.min.css' %}" type="text/css">
   <link rel="stylesheet" href="{% static 'css/style.css' %}" type="text/css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
 
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -526,10 +528,12 @@
                 <a href="#" class="navigation__link">Blog</a></li>
               <li class="navigation__item">
                 <a href="#" class="navigation__link">Pages</a></li>
+                {% if request.user.is_authenticated %}
               <li class="navigation__item">
-                <a href="about.html" class="navigation__link">About</a></li>
+                <a href="{% url 'userlogout' %}" class="navigation__link">About</a></li>
+                {% endif %}
               <li class="navigation__item">
-                <a href="contact.html" class="navigation__link">Contact</a></li>
+                <a href="{% provider_login_url 'google' %}?next=/" class="navigation__link">Contact</a></li>
 
             </ul><!-- /.navigation__list -->
           </nav><!-- /.navigation -->
@@ -739,6 +743,7 @@
     </div><!-- /.aside-header -->
 
     <div class="aside-content cart-drawer-items-list">
+      {% for cart in cart_item %}
       <div class="cart-drawer-item d-flex position-relative">
         <div class="position-relative">
           <img loading="lazy" class="cart-drawer-item__img" src="../images/cart-item-1.jpg" alt="">
@@ -759,52 +764,9 @@
 
         <button class="btn-close-xs position-absolute top-0 end-0 js-cart-item-remove"></button>
       </div><!-- /.cart-drawer-item d-flex -->
+      {% endfor %}
 
       <hr class="cart-drawer-divider">
-
-      <div class="cart-drawer-item d-flex position-relative">
-        <div class="position-relative">
-          <img loading="lazy" class="cart-drawer-item__img" src="../images/cart-item-2.jpg" alt="">
-        </div>
-        <div class="cart-drawer-item__info flex-grow-1">
-          <h6 class="cart-drawer-item__title fw-normal">Kirby T-Shirt</h6>
-          <p class="cart-drawer-item__option text-secondary">Color: Black</p>
-          <p class="cart-drawer-item__option text-secondary">Size: XS</p>
-          <div class="d-flex align-items-center justify-content-between mt-1">
-            <div class="qty-control position-relative">
-              <input type="number" name="quantity" value="4" min="1" class="qty-control__number border-0 text-center">
-              <div class="qty-control__reduce text-start">-</div>
-              <div class="qty-control__increase text-end">+</div>
-            </div><!-- .qty-control -->
-            <span class="cart-drawer-item__price money price">$89</span>
-          </div>
-        </div>
-
-        <button class="btn-close-xs position-absolute top-0 end-0 js-cart-item-remove"></button>
-      </div><!-- /.cart-drawer-item d-flex -->
-
-      <hr class="cart-drawer-divider">
-
-      <div class="cart-drawer-item d-flex position-relative">
-        <div class="position-relative">
-          <img loading="lazy" class="cart-drawer-item__img" src="../images/cart-item-3.jpg" alt="">
-        </div>
-        <div class="cart-drawer-item__info flex-grow-1">
-          <h6 class="cart-drawer-item__title fw-normal">Cableknit Shawl</h6>
-          <p class="cart-drawer-item__option text-secondary">Color: Green</p>
-          <p class="cart-drawer-item__option text-secondary">Size: L</p>
-          <div class="d-flex align-items-center justify-content-between mt-1">
-            <div class="qty-control position-relative">
-              <input type="number" name="quantity" value="3" min="1" class="qty-control__number border-0 text-center">
-              <div class="qty-control__reduce text-start">-</div>
-              <div class="qty-control__increase text-end">+</div>
-            </div><!-- .qty-control -->
-            <span class="cart-drawer-item__price money price">$129</span>
-          </div>
-        </div>
-
-        <button class="btn-close-xs position-absolute top-0 end-0 js-cart-item-remove"></button>
-      </div><!-- /.cart-drawer-item d-flex -->
 
     </div><!-- /.aside-content -->
 

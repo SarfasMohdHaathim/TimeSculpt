@@ -2,10 +2,20 @@
 {% load static %}
 
 {% block main %}
-<div class="popup-container" id="popup">
-  <p>Tommy Hilfiger Formal Men product Added Successfully.</p>&nbsp;&nbsp;&nbsp;
-  <span class="close-btn" onclick="closePopup()">&times;</span>
-</div>
+{% if messages %}
+{% for message in messages %}
+    <div class="alertbox">
+      <div class="alert showAlert">
+        <span class="fas fa-check-circle"></span>
+        <span class="msg">{{ message }}</span>
+        <div class="close-btn">
+          <span class="fas fa-times"></span>
+        </div>
+      </div>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
 
   <main>
     <div class="mb-md-1 pb-md-3"></div>
@@ -72,11 +82,9 @@
           <div class="product-single__short-desc">
             <p>{{watch.watch_details}}</p>
           </div>
-          <form name="addtocart-form" method="post">
             <div class="product-single__addtocart">
-              <button type="submit" class="btn btn-primary btn-addtocart">Add Cart</button>
+              <a href="{% url 'addCart' watch.id %}" class="btn btn-primary btn-addtocart">Add Cart</a>
             </div>
-          </form>
           <div class="product-single__addtolinks">
             <a href="#" class="menu-link menu-link_us-s add-to-wishlist"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg><span>Add to Wishlist</span></a>
             <share-button class="share-button">
@@ -279,10 +287,17 @@
   <div class="mb-5 pb-xl-5"></div>
 
   <script>
-    function closePopup() {
-      document.getElementById('popup').style.display = 'none';
-      document.getElementById('overlay').style.display = 'none';
-    }
+    $(document).ready(function() {
+      setTimeout(function() {
+        $('.alert').removeClass("show");
+        $('.alert').addClass("hide");
+      }, 100000);
+  
+      $('.close-btn').click(function () {
+        $('.alert').removeClass("show");
+        $('.alert').addClass("hide");
+      });
+    });
   </script>
-
+  
 {% endblock main %}
