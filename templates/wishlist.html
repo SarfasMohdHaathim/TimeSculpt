@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<main>
+    <div class="mb-4 pb-4"></div>
+    <section class="my-account container">
+      <h2 class="page-title">Wishlist</h2>
+      <div class="row">
+        <div class="col-lg-3">
+          <ul class="account-nav">
+            <li><a href="{% url 'dashboard' %}" class="menu-link menu-link_us-s">Dashboard</a></li>
+            <li><a href="{% url 'orders_page' %}" class="menu-link menu-link_us-s">Orders</a></li>
+            <li><a href="{% url 'account_address' %}" class="menu-link menu-link_us-s">Addresses</a></li>
+            <li><a href="{% url 'userlogout' %}" class="menu-link menu-link_us-s">Account Details</a></li>
+            <li><a href="{% url 'userlogout' %}" class="menu-link menu-link_us-s menu-link_active">Wishlist</a></li>
+            <li><a href="{% url 'wishlist' %}" class="menu-link menu-link_us-s">Logout</a></li>
+          </ul>
+        </div>
+        <div class="col-lg-9">
+          <div class="page-content my-account__wishlist">
+            <div class="products-grid row row-cols-2 row-cols-lg-3" id="products-grid" >
+                {% for cart in wishlist %}
+              <div class="product-card-wrapper">
+                <div class="product-card mb-3 mb-md-4 mb-xxl-5">
+                  <div class="pc__img-wrapper">
+                    <div class="swiper-container background-img js-swiper-slider" data-settings='{"resizeObserver": true}'>
+                      <div class="swiper-wrapper">
+                        <div class="swiper-slide">
+                          <img loading="lazy" src="{{cart.watch_name.watch_thumbnail.url}}" width="330" height="400" alt="Cropped Faux leather Jacket" class="pc__img">
+                        </div><!-- /.pc__img-wrapper -->
+                      </div>
+                        </div>
+                    <a href="{% url 'addCart' cart.id %}" class="btn-remove-from-wishlist">
+                      <svg width="12" height="12" viewBox="0 0 12 12" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_cart" /></svg>
+                    </a>
+                  </div>
+      
+                  <div class="pc__info position-relative">
+                    <p class="pc__category">{{cart.watch_name.brands}}</p>
+                    <h6 class="pc__title">{{cart.watch_name.watch_name}} {{cart.watch_name.style}} {{cart.watch_name.gender}}</h6>
+                    <div class="product-card__price d-flex">
+                      <span class="money price">${{cart.watch_name.actual_price}}</span>
+                    </div>
+                    <a href="{% url 'addCart' cart.id %}" class="pc__btn-cart position-absolute top-0 end-0 bg-transparent border-0 js-add-cart" title="Add To Cart">
+                        <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <use href="#icon_cart"></use>
+                        </svg>
+                    </a>
+                    
+                  </div>
+                </div>
+              </div>
+              {%endfor%}
+            </div><!-- /.products-grid row -->
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="mb-5 pb-xl-5"></div>
+  
+  
+  {% endblock main %}

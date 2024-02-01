@@ -9,7 +9,10 @@ from django.conf import settings
 import razorpay
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_POST
-from datetime import datetime, timedelta
+from datetime import  timedelta
+from django.contrib.auth import authenticate, login
+
+
 
 class HomeView(TemplateView):
     template_name = 'index.html'
@@ -29,6 +32,7 @@ class WatchDetailView(TemplateView):
         context = super().get_context_data(**kwargs)
         watch_id = kwargs['watch_id']
         watch = Watch.objects.get(id=watch_id)
+        watch_image=WatchImage.objects.filter(watch_name=watch)
         related_products = Watch.objects.filter(
             Q(brands=watch.brands) |
             Q(gender=watch.gender) |
@@ -39,6 +43,8 @@ class WatchDetailView(TemplateView):
             Q(strap_material=watch.strap_material)
         ).exclude(id=watch.id)[:4]
         context['watch'] = watch
+        context['watch_image'] = watch_image
+        print(watch_image)
         context['related_products'] = related_products
         print(related_products)
         return context
@@ -50,20 +56,47 @@ class WatchView(TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        gender = self.request.GET.get('gender')
+        gender = self.request.GET.getlist('gender')
         brands = self.request.GET.getlist('brand')
+        styles = self.request.GET.getlist('style')
+        strap_materials = self.request.GET.getlist('strap_material')
+        dial_types = self.request.GET.getlist('dial_type')
+        dial_colours = self.request.GET.getlist('dial_colour')
+        dial_shapes = self.request.GET.getlist('dial_shape')
 
         watches = Watch.objects.all()
         if gender:
-            watches = watches.filter(gender=gender)
+            watches = watches.filter(gender__in=gender)
         if brands:
             watches = watches.filter(brands__in=brands)
-        context['product'] = watches
-        print(gender,'------------------------------------------------')
-        context['GENDER_CHOICES'] = Watch.GENDER_CHOICES 
-        context['BRAND_CHOICES'] = Watch.BRAND_CHOICES 
-        return context
+        if styles:
+            watches = watches.filter(style__in=styles)
+        if strap_materials:
+            watches = watches.filter(strap_material__in=strap_materials)
+        if dial_types:
+            watches = watches.filter(dial_type__in=dial_types)
+        if dial_colours:
+            watches = watches.filter(dial_colour__in=dial_colours)
+        if dial_shapes:
+            watches = watches.filter(dial_shape__in=dial_shapes)
 
+        context['products'] = watches
+        context['GENDER_CHOICES'] = Watch.GENDER_CHOICES
+        context['BRAND_CHOICES'] = Watch.BRAND_CHOICES
+        context['STYLE_CHOICES'] = Watch.STYLE_CHOICES
+        context['STRAP_MATERIAL_CHOICES'] = Watch.STRAP_MATERIAL_CHOICES
+        context['DIAL_TYPE_CHOICES'] = Watch.DIAL_TYPE_CHOICES
+        context['DIAL_COLOUR_CHOICES'] = Watch.DIAL_COLOUR_CHOICES
+        context['DIAL_SHAPE_CHOICES'] = Watch.DIAL_SHAPE_CHOICES
+        context['selected_brands'] = brands
+        context['selected_gender'] = gender
+        context['selected_styles'] = styles
+        context['selected_strap_materials'] = strap_materials
+        context['selected_dial_types'] = dial_types
+        context['selected_dial_colours'] = dial_colours
+        context['selected_dial_shapes'] = dial_shapes
+
+        return context
 
 
 def userlogout(request):
@@ -335,3 +368,95 @@ def orders_page(request):
         total += order.product.actual_price()
     context = {'orders': orders, 'total': total}
     return render(request, 'account_order.html', context)
+
+
+def register(request):
+    if request.method == 'POST':
+        f_name = request.POST.get('f_name')
+        l_name = request.POST.get('l_name')
+        email = request.POST.get('register_email')
+        password = request.POST.get('register_password')
+        confirm_password = request.POST.get('register_confirm_password')
+        username = email.split('@')[0]
+
+        if password == confirm_password:
+            try:
+                user = User.objects.create_user(username=username,first_name=f_name,last_name=l_name,
+                                                email=email, password=password)
+                user.save()
+
+                user = authenticate(request, username=username, password=password)
+                login(request, user)
+                messages.success(request, 'You have successfully registered and logged in.')
+                return redirect('home')
+            except:
+                messages.error(request, 'Email Already Registered, Please Log In')
+                return redirect(request.path + '#tab-item-register')
+        else:
+            messages.error(request, 'Passwords do not match.')
+            return redirect('register')
+    else:
+        return render(request, 'register.html')
+    
+
+def userlogin(request):
+    if request.method == 'POST':
+        email = request.POST['login_email']
+        password = request.POST['login_password']
+        username = email.split('@')[0]
+        user = authenticate(request, username=username, password=password)
+
+        if user is not None:
+            login(request, user)
+            return redirect('home')
+        else:
+            messages.error(request, 'Invalid Credential')
+            return redirect('userlogin')
+    else:
+        return render(request, 'login.html')
+    
+
+
+def dashboard(request):
+    user = request.user  
+    fname = user.first_name
+    lname = user.last_name
+    context = {'fname': fname, 'lname': lname}
+    return render(request, 'account_dashboard.html', context)
+
+
+
+
+def account_address(request):
+    context={}
+    context['first_name'] = request.user.first_name
+    context['last_name'] = request.user.last_name
+    address_exists =Address.objects.filter(user=request.user).exists()
+    if address_exists :
+        context['address'] = Address.objects.get(user=request.user)
+       
+    return render(request, 'account_address.html', context)
+
+
+
+
+
+def wishlist(request):
+    user=request.user
+    wishlist=Wishlist.objects.filter(user=user)
+    context={'wishlist':wishlist}
+    return render(request,'wishlist.html',context)
+
+
+def addtowishlist(request,pk):
+    user=request.user
+    product=Watch.objects.get(id=pk)
+    Wishlist.objects.create(user=user,watch_name=product).save()
+    return redirect('wishlist')
+
+
+
+def removewishlist(request,pk):
+    wishlist=Wishlist.objects.get(id=pk)
+    wishlist.delete()
+    return redirect('wishlist')

@@ -12111,7 +12111,8 @@ textarea.form-control-lg {
   position: relative;
   padding: 0.5em 0;
   color: #222222;
-  line-height: 1.5em; }
+  line-height: 1.5em;
+  margin-right: 15px; }
 
 .menu-link_us-s:after {
   content: '';
@@ -15738,4 +15739,14 @@ body.coming-soon-page {
 }
 .pay-btn{
   margin:40px ;
+}
+.text-danger {
+  color: #ff200d !important;
+}
+#filter-btn{
+  height: 31px;
+  width: 100%;
+  background: black;
+  color: white;
+  border: none;
 }

@@ -131,3 +131,20 @@ class OrderPlaced(models.Model):
     product=models.ForeignKey(Watch ,on_delete=models.CASCADE)
     ordered_date=models.DateField(auto_now_add=True)
     payment=models.ForeignKey(Payment,on_delete=models.CASCADE,default="")
+
+
+
+class Wishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
+    watch_name = models.ForeignKey(Watch, on_delete=models.SET_NULL,null=True)
+    def __str__(self):
+        return self.watch_name.watch_name
+    
+
+
+
+class WatchImage(models.Model):
+    watch_name = models.ForeignKey(Watch, on_delete=models.SET_NULL,null=True)
+    watch_image = models.ImageField(upload_to='watch_image/',blank=True,null=True)
+    def __str__(self):
+        return self.watch_name.watch_name
