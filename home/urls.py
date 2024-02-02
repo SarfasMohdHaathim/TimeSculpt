@@ -21,6 +21,8 @@ urlpatterns = [
     path('dashboard/', dashboard, name='dashboard'),
     path('account_address/', account_address, name='account_address'),
     path('wishlist',wishlist,name="wishlist"),
+    path('brands',brands,name="brands"),
+    path('stores',stores,name="stores"),
     path('add-to-wishlist/<int:pk>/', addtowishlist, name='add_to_wishlist'),
     path('remove-from-wishlist/<int:pk>/', removewishlist, name='remove_from_wishlist'),
 ]

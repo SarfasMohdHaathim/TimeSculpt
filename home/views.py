@@ -448,6 +448,18 @@ def wishlist(request):
     return render(request,'wishlist.html',context)
 
 
+
+
+
+def brands(request):
+    return render(request,'brand.html')
+
+
+
+def stores(request):
+    return render(request,'store.html')
+
+
 def addtowishlist(request,pk):
     user=request.user
     product=Watch.objects.get(id=pk)

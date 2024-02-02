@@ -1,9 +1,10 @@
-from .models import Cart
+from .models import Cart,Watch
 
 def base_common(request):
     cart_item={}
     cart_count=0
     famount=0
+    brands=Watch.BRAND_CHOICES
     if request.user.is_authenticated:
         
         try:
@@ -17,5 +18,5 @@ def base_common(request):
             pass
 
     return {
-        'cart_item': cart_item,'famount':famount,'cart_count':cart_count
+        'cart_item': cart_item,'famount':famount,'cart_count':cart_count,'brands':brands
     }

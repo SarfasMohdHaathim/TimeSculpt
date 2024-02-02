@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+<main>
+    <div class="mb-4 pb-4"></div>
+    <section class="store-location container">
+      <h2 class="page-title">STORE LOCATOR</h2>
+
+      <div class="row">
+        <div class="col-lg-12">
+          <form action="" method="GET">
+            <div class="store-location__search">
+              <input class="store-location__search-input" type="text" name="search-keyword" placeholder="Enter your country or city">
+              <button class="btn-icon store-location__search-btn" type="submit">
+                <svg class="d-block" width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_search" /></svg>
+              </button>
+            </div>
+
+            <div class="store-location__search-result">
+              <div class="store-location__search-result__item">
+                <h5>Store in London</h5>
+                <p>1418 River Drive, Suite 35 Cottonhall, CA 9622<br>United States<br>+1 246-345-0695<br>10 am - 10 pm EST, 7 days a week</p>
+                <a id="store_selector_1" href="#map">See on the map</a>
+              </div>
+              <div class="store-location__search-result__item">
+                <h5>Store in Istanbul</h5>
+                <p>1418 River Drive, Suite 35 Cottonhall, CA 9622<br>United States<br>+1 246-345-0695<br>10 am - 10 pm EST, 7 days a week</p>
+                <a id="store_selector_2" href="#map">See on the map</a>
+              </div>
+              <div class="store-location__search-result__item">
+                <h5>Store in New York</h5>
+                <p>1418 River Drive, Suite 35 Cottonhall, CA 9622<br>United States<br>+1 246-345-0695<br>10 am - 10 pm EST, 7 days a week</p>
+                <a id="store_selector_3" href="#map">See on the map</a>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <div class="mb-5 pb-xl-5"></div>
+ 
+  {% endblock main %}
