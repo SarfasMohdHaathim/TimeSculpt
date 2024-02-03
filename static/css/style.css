@@ -3266,6 +3266,8 @@ progress {
 
 .fs-6 {
   font-size: 1rem !important; }
+.fs-7 {
+  font-size: .80rem !important; }
 
 .fst-italic {
   font-style: italic !important; }
@@ -15749,4 +15751,7 @@ body.coming-soon-page {
   background: black;
   color: white;
   border: none;
+}
+.multi-select__list .search-suggestion__item span{
+  font-size: small;
 }

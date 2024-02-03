@@ -11,6 +11,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_POST
 from datetime import  timedelta
 from django.contrib.auth import authenticate, login
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 
 
@@ -26,7 +27,7 @@ class HomeView(TemplateView):
 
 
 class WatchDetailView(TemplateView):
-    template_name = 'details.html'
+    template_name = 'watch.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -44,7 +45,7 @@ class WatchDetailView(TemplateView):
         ).exclude(id=watch.id)[:4]
         context['watch'] = watch
         context['watch_image'] = watch_image
-        print(watch_image)
+        print(watch_image,'============================')
         context['related_products'] = related_products
         print(related_products)
         return context
@@ -80,7 +81,19 @@ class WatchView(TemplateView):
         if dial_shapes:
             watches = watches.filter(dial_shape__in=dial_shapes)
 
+        paginator = Paginator(watches, 10)  
+        page = self.request.GET.get('page')
+
+        try:
+            watches = paginator.page(page)
+        except PageNotAnInteger:
+            watches = paginator.page(1)
+        except EmptyPage:
+            watches = paginator.page(paginator.num_pages)
+
         context['products'] = watches
+        context['paginator'] = paginator  
+
         context['GENDER_CHOICES'] = Watch.GENDER_CHOICES
         context['BRAND_CHOICES'] = Watch.BRAND_CHOICES
         context['STYLE_CHOICES'] = Watch.STYLE_CHOICES
@@ -97,6 +110,7 @@ class WatchView(TemplateView):
         context['selected_dial_shapes'] = dial_shapes
 
         return context
+
 
 
 def userlogout(request):

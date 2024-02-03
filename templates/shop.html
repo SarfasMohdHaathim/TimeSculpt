@@ -10,16 +10,16 @@
     <section class="shop-main container d-flex">
         <div class="shop-sidebar side-sticky bg-body" id="shopFilter">
             <div class="aside-header d-flex d-lg-none align-items-center">
-              <h3 class="text-uppercase fs-6 mb-0">Filter By</h3>
+              <h3 class="text-uppercase fs-7 mb-0">Filter By</h3>
               <button class="btn-close-lg js-close-aside btn-close-aside ms-auto"></button>
             </div><!-- /.aside-header -->
     
             <div class="pt-4 pt-lg-0"></div>
     
             <div class="accordion" id="brand-filters">
-              <div class="accordion-item mb-4 pb-3">
+              <div class="accordion-item mb-4">
                 <h5 class="accordion-header" id="accordion-heading-brand">
-                  <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-filter-brand" aria-expanded="true" aria-controls="accordion-filter-brand">
+                  <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-filter-brand" aria-expanded="true" aria-controls="accordion-filter-brand">
                     Filter Gender
                     <svg class="accordion-button__icon type2" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
                       <g aria-hidden="true" stroke="none" fill-rule="evenodd">
@@ -64,9 +64,9 @@
     
     
             <div class="accordion" id="brand-filters">
-              <div class="accordion-item mb-4 pb-3">
+              <div class="accordion-item mb-4">
                 <h5 class="accordion-header" id="accordion-heading-brand">
-                  <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-filter-brand" aria-expanded="true" aria-controls="accordion-filter-brand">
+                  <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-filter-brand" aria-expanded="true" aria-controls="accordion-filter-brand">
                     Filter Brands
                     <svg class="accordion-button__icon type2" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
                       <g aria-hidden="true" stroke="none" fill-rule="evenodd">
@@ -110,9 +110,9 @@
     
 
             <div class="accordion" id="style-filters">
-              <div class="accordion-item mb-4 pb-3">
+              <div class="accordion-item mb-4">
                   <h5 class="accordion-header" id="accordion-heading-style">
-                      <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
+                      <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button"
                               data-bs-toggle="collapse" data-bs-target="#accordion-filter-style" aria-expanded="true"
                               aria-controls="accordion-filter-style">
                           Filter Style
@@ -158,9 +158,9 @@
               </div><!-- /.accordion-item -->
           </div><!-- /.accordion -->
           <div class="accordion" id="strap-material-filters">
-            <div class="accordion-item mb-4 pb-3">
+            <div class="accordion-item mb-4">
                 <h5 class="accordion-header" id="accordion-heading-strap-material">
-                    <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
+                    <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button"
                             data-bs-toggle="collapse" data-bs-target="#accordion-filter-strap-material" aria-expanded="true"
                             aria-controls="accordion-filter-strap-material">
                         Filter Strap Material
@@ -212,9 +212,9 @@
         
         
         <div class="accordion" id="dial-type-filters">
-          <div class="accordion-item mb-4 pb-3">
+          <div class="accordion-item mb-4">
               <h5 class="accordion-header" id="accordion-heading-dial-type">
-                  <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
+                  <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button"
                           data-bs-toggle="collapse" data-bs-target="#accordion-filter-dial-type" aria-expanded="true"
                           aria-controls="accordion-filter-dial-type">
                       Filter Dial Type
@@ -262,9 +262,9 @@
       
       
       <div class="accordion" id="dial-colour-filters">
-        <div class="accordion-item mb-4 pb-3">
+        <div class="accordion-item mb-4">
             <h5 class="accordion-header" id="accordion-heading-dial-colour">
-                <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
+                <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button"
                         data-bs-toggle="collapse" data-bs-target="#accordion-filter-dial-colour" aria-expanded="true"
                         aria-controls="accordion-filter-dial-colour">
                     Filter Dial Colour
@@ -312,9 +312,9 @@
     </div><!-- /.accordion -->
     
     <div class="accordion" id="dial-shape-filters">
-      <div class="accordion-item mb-4 pb-3">
+      <div class="accordion-item mb-4">
           <h5 class="accordion-header" id="accordion-heading-dial-shape">
-              <button class="accordion-button p-0 border-0 fs-5 text-uppercase" type="button"
+              <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button"
                       data-bs-toggle="collapse" data-bs-target="#accordion-filter-dial-shape" aria-expanded="true"
                       aria-controls="accordion-filter-dial-shape">
                   Filter Dial Shape
@@ -442,23 +442,36 @@
           {% endfor %}
 
         </div><!-- /.products-grid row -->
-
-        <nav class="shop-pages d-flex justify-content-between mt-3" aria-label="Page navigation">
-          <a href="#" class="btn-link d-inline-flex align-items-center">
-            <svg class="me-1" width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_prev_sm" /></svg>
-            <span class="fw-medium">PREV</span>
+      <!-- Pagination -->
+      {% if paginator.num_pages > 1 %}
+      <nav class="shop-pages d-flex justify-content-between mt-3" aria-label="Page navigation">
+          {% if products.has_previous %}
+          <a href="?page={{ products.previous_page_number }}" class="btn-link d-inline-flex align-items-center">
+              <svg class="me-1" width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg">
+                  <use href="#icon_prev_sm" />
+              </svg>
+              <span class="fw-medium">PREV</span>
           </a>
+          {% endif %}
           <ul class="pagination mb-0">
-            <li class="page-item"><a class="btn-link px-1 mx-2 btn-link_active" href="#">1</a></li>
-            <li class="page-item"><a class="btn-link px-1 mx-2" href="#">2</a></li>
-            <li class="page-item"><a class="btn-link px-1 mx-2" href="#">3</a></li>
-            <li class="page-item"><a class="btn-link px-1 mx-2" href="#">4</a></li>
+              {% for num in paginator.page_range %}
+              <li class="page-item {% if products.number == num %}active{% endif %}">
+                  <a class="btn-link px-1 mx-2" href="?page={{ num }}">{{ num }}</a>
+              </li>
+              {% endfor %}
           </ul>
-          <a href="#" class="btn-link d-inline-flex align-items-center">
-            <span class="fw-medium me-1">NEXT</span>
-            <svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg"><use href="#icon_next_sm" /></svg>
+          {% if products.has_next %}
+          <a href="?page={{ products.next_page_number }}" class="btn-link d-inline-flex align-items-center">
+              <span class="fw-medium me-1">NEXT</span>
+              <svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg">
+                  <use href="#icon_next_sm" />
+              </svg>
           </a>
-        </nav>
+          {% endif %}
+      </nav>
+      {% endif %}
+      <!-- End Pagination -->
+
       </div>
     </section><!-- /.shop-main container -->
   </main>
