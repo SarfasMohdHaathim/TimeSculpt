@@ -16,14 +16,15 @@ from django.db.models import Max
 
 
 class HomeView(TemplateView):
-    template_name = 'index.html'
+    template_name = 'a.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         current_user = self.request.user
         print(current_user)
         context['product'] = Watch.objects.all()[0:5]
-        context['f_product'] = Watch.objects.filter(discount__gt=5)[0:5]
+        context['f_product'] = Watch.objects.filter(discount__gt=5).order_by('-discount')[:5]
+        context['p_product'] = Watch.objects.filter(discount__gt=5).order_by('-price')[:5]
         print()
         return context
 
@@ -66,6 +67,7 @@ class WatchView(TemplateView):
         dial_types = self.request.GET.getlist('dial_type')
         dial_colours = self.request.GET.getlist('dial_colour')
         dial_shapes = self.request.GET.getlist('dial_shape')
+        sort_option = self.request.GET.get('sort')
 
         watches = Watch.objects.all()
         if gender:
@@ -82,6 +84,24 @@ class WatchView(TemplateView):
             watches = watches.filter(dial_colour__in=dial_colours)
         if dial_shapes:
             watches = watches.filter(dial_shape__in=dial_shapes)
+
+
+        if sort_option == '1': 
+            watches = watches.order_by('watch_name')
+        elif sort_option == '2': 
+            watches = watches.order_by('watch_name')
+        elif sort_option == '3':  
+            watches = watches.order_by('watch_name')
+        elif sort_option == '4':
+            watches = watches.order_by('-watch_name')
+        elif sort_option == '5': 
+            watches = watches.order_by('price')
+        elif sort_option == '6': 
+            watches = watches.order_by('-price')
+        elif sort_option == '7':  
+            watches = watches.order_by('created_at')
+        elif sort_option == '8': 
+            watches = watches.order_by('-created_at')    
 
         paginator = Paginator(watches, 10)  
         page = self.request.GET.get('page')
