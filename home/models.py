@@ -99,8 +99,8 @@ class Watch(models.Model):
 
 
 class Cart(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
-    watch_name = models.ForeignKey(Watch, on_delete=models.SET_NULL,null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    watch_name = models.ForeignKey(Watch, on_delete=models.CASCADE,null=True)
     def __str__(self):
         return self.watch_name.watch_name
 
@@ -135,8 +135,8 @@ class OrderPlaced(models.Model):
 
 
 class Wishlist(models.Model):
-    user = models.ForeignKey(User, on_delete=models.SET_NULL,null=True)
-    watch_name = models.ForeignKey(Watch, on_delete=models.SET_NULL,null=True)
+    user = models.ForeignKey(User, on_delete=models.CASCADE,null=True)
+    watch_name = models.ForeignKey(Watch, on_delete=models.CASCADE,null=True)
     def __str__(self):
         return self.watch_name.watch_name
     
@@ -144,7 +144,7 @@ class Wishlist(models.Model):
 
 
 class WatchImage(models.Model):
-    watch_name = models.ForeignKey(Watch, on_delete=models.SET_NULL,null=True)
+    watch_name = models.ForeignKey(Watch, on_delete=models.CASCADE,null=True)
     watch_image = models.ImageField(upload_to='watch_image/',blank=True,null=True)
     def __str__(self):
         return self.watch_name.watch_name

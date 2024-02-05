@@ -23,6 +23,7 @@ urlpatterns = [
     path('wishlist',wishlist,name="wishlist"),
     path('brands',brands,name="brands"),
     path('stores',stores,name="stores"),
+    path('offer',offers,name="offer"),
     path('add-to-wishlist/<int:pk>/', addtowishlist, name='add_to_wishlist'),
     path('remove-from-wishlist/<int:pk>/', removewishlist, name='remove_from_wishlist'),
 ]

@@ -12,7 +12,7 @@ from django.views.decorators.http import require_POST
 from datetime import  timedelta
 from django.contrib.auth import authenticate, login
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-
+from django.db.models import Max
 
 
 class HomeView(TemplateView):
@@ -22,7 +22,9 @@ class HomeView(TemplateView):
         context = super().get_context_data(**kwargs)
         current_user = self.request.user
         print(current_user)
-        context['product'] = Watch.objects.all()
+        context['product'] = Watch.objects.all()[0:5]
+        context['f_product'] = Watch.objects.filter(discount__gt=5)[0:5]
+        print()
         return context
 
 
@@ -136,7 +138,7 @@ class CartView(LoginRequiredMixin,TemplateView):
         damount = 0
         for c in cart:
             pamount += c.watch_name.price
-            famount += c.watch_name.actual_price()
+            famount +=1
             damount += c.watch_name.discounted_price()
         return famount, pamount, damount
 
@@ -145,7 +147,7 @@ class CartView(LoginRequiredMixin,TemplateView):
         cart = Cart.objects.filter(user=user)
         famount = 0
         for c in cart:
-            famount += c.watch_name.actual_price()
+            famount +=1
         razoramount = int(famount * 100)
         client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
         data = {'amount': razoramount, "currency": "INR", "receipt": "order_rcptid_12"}
@@ -163,18 +165,18 @@ class CartView(LoginRequiredMixin,TemplateView):
             email = request.user.email
             context = {'famount': famount, 'razoramount': razoramount, 'email': email, 'payment': payment}
             
-            context['first_name'] = self.request.user.first_name
-            context['last_name'] = self.request.user.last_name
-            current_user = self.request.user
+            context['first_name'] = request.user.first_name
+            context['last_name'] = request.user.last_name
+            current_user = request.user
             context['cart'] = Cart.objects.filter(user=current_user)
             cart = Cart.objects.filter(user=current_user)
-            famount, pamount, damount = self.get_famount(cart)
+            famount, pamount, damount = get_famount(cart)
             context['famount'] = famount
             context['pamount'] = pamount
             context['damount'] = damount
-            address_exists =Address.objects.filter(user=self.request.user).exists()
+            address_exists =Address.objects.filter(user=request.user).exists()
             if address_exists :
-                context['address'] = Address.objects.get(user=self.request.user)
+                context['address'] = Address.objects.get(user=request.user)
             
             return render(request,'checkout.html',context)
         else:
@@ -182,18 +184,18 @@ class CartView(LoginRequiredMixin,TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        current_user = self.request.user
+        current_user = request.user
         context['cart'] = Cart.objects.filter(user=current_user)
         cart = Cart.objects.filter(user=current_user)
-        famount, pamount, damount = self.get_famount(cart)
+        famount, pamount, damount = get_famount(cart)
         context['famount'] = famount
         context['pamount'] = pamount
         context['damount'] = damount
         context['current_user'] = current_user
         print(famount)
-        address_exists =Address.objects.filter(user=self.request.user).exists()
+        address_exists =Address.objects.filter(user=request.user).exists()
         if address_exists :
-            context['address'] = Address.objects.get(user=self.request.user)
+            context['address'] = Address.objects.get(user=request.user)
         return context
 
 
@@ -215,19 +217,19 @@ class CheckOut(LoginRequiredMixin,TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.user.is_authenticated:
-            context['first_name'] = self.request.user.first_name
-            context['last_name'] = self.request.user.last_name
-            address_exists =Address.objects.filter(user=self.request.user).exists()
+        if request.user.is_authenticated:
+            context['first_name'] = request.user.first_name
+            context['last_name'] = request.user.last_name
+            address_exists =Address.objects.filter(user=request.user).exists()
             if address_exists :
-                context['address'] = Address.objects.get(user=self.request.user)
-                current_user = self.request.user
+                context['address'] = Address.objects.get(user=request.user)
+                current_user = request.user
                 context['cart'] = Cart.objects.filter(user=current_user)
                 cart = Cart.objects.filter(user=current_user)
                 pamount,famount,damount=0,0,0
                 for c in cart:
                     pamount += c.watch_name.price
-                    famount += c.watch_name.actual_price()
+                    famount +=1
                     damount += c.watch_name.discounted_price()
                 print(context)
                 context['famount'] = famount
@@ -268,19 +270,19 @@ class ShippingAddress(LoginRequiredMixin,TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if self.request.user.is_authenticated:
-            context['first_name'] = self.request.user.first_name
-            context['last_name'] = self.request.user.last_name
-            address_exists =Address.objects.filter(user=self.request.user).exists()
+        if request.user.is_authenticated:
+            context['first_name'] = request.user.first_name
+            context['last_name'] = request.user.last_name
+            address_exists =Address.objects.filter(user=request.user).exists()
             if address_exists :
-                context['address'] = Address.objects.get(user=self.request.user)
-                current_user = self.request.user
+                context['address'] = Address.objects.get(user=request.user)
+                current_user = request.user
                 context['cart'] = Cart.objects.filter(user=current_user)
                 cart = Cart.objects.filter(user=current_user)
                 pamount,famount,damount=0,0,0
                 for c in cart:
                     pamount += c.watch_name.price
-                    famount += c.watch_name.actual_price()
+                    famount +=1
                     damount += c.watch_name.discounted_price()
                 print(context)
                 context['famount'] = famount
@@ -486,3 +488,61 @@ def removewishlist(request,pk):
     wishlist=Wishlist.objects.get(id=pk)
     wishlist.delete()
     return redirect('wishlist')
+
+
+
+
+def offers(request):
+    gender = request.GET.getlist('gender')
+    brands = request.GET.getlist('brand')
+    styles = request.GET.getlist('style')
+    strap_materials = request.GET.getlist('strap_material')
+    dial_types = request.GET.getlist('dial_type')
+    dial_colours = request.GET.getlist('dial_colour')
+    dial_shapes = request.GET.getlist('dial_shape')
+
+    watches = Watch.objects.all()
+    if gender:
+        watches = watches.filter(gender__in=gender)
+    if brands:
+        watches = watches.filter(brands__in=brands)
+    if styles:
+        watches = watches.filter(style__in=styles)
+    if strap_materials:
+        watches = watches.filter(strap_material__in=strap_materials)
+    if dial_types:
+        watches = watches.filter(dial_type__in=dial_types)
+    if dial_colours:
+        watches = watches.filter(dial_colour__in=dial_colours)
+    if dial_shapes:
+        watches = watches.filter(dial_shape__in=dial_shapes)
+
+    paginator = Paginator(watches, 10)  
+    page = request.GET.get('page')
+
+    try:
+        watches = paginator.page(page)
+    except PageNotAnInteger:
+        watches = paginator.page(1)
+    except EmptyPage:
+        watches = paginator.page(paginator.num_pages)
+    context={}
+    context['products'] = watches
+    context['paginator'] = paginator  
+
+    context['GENDER_CHOICES'] = Watch.GENDER_CHOICES
+    context['BRAND_CHOICES'] = Watch.BRAND_CHOICES
+    context['STYLE_CHOICES'] = Watch.STYLE_CHOICES
+    context['STRAP_MATERIAL_CHOICES'] = Watch.STRAP_MATERIAL_CHOICES
+    context['DIAL_TYPE_CHOICES'] = Watch.DIAL_TYPE_CHOICES
+    context['DIAL_COLOUR_CHOICES'] = Watch.DIAL_COLOUR_CHOICES
+    context['DIAL_SHAPE_CHOICES'] = Watch.DIAL_SHAPE_CHOICES
+    context['selected_brands'] = brands
+    context['selected_gender'] = gender
+    context['selected_styles'] = styles
+    context['selected_strap_materials'] = strap_materials
+    context['selected_dial_types'] = dial_types
+    context['selected_dial_colours'] = dial_colours
+    context['selected_dial_shapes'] = dial_shapes
+
+    return render(request,'offer.html',context)

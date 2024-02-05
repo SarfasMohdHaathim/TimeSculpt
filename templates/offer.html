@@ -1,0 +1,502 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block main %}
+
+
+<main>
+
+    <div class="container">
+      <div class="breadcrumb mb-4 pb-md-2">
+        <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium" >Home</a>
+        <span class="breadcrumb-separator menu-link fw-medium ps-1 pe-1">/</span>
+        <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium" >The Shop</a>
+      </div><!-- /.breadcrumb -->
+    </div>
+
+    <section class="collections-grid collections-grid_masonry" id="section-collections-grid_masonry">
+      <div class="container">
+        <div class="row">
+          <div class="col-lg-12">
+                <img src="https://dev1-cdn.helioswatchstore.com/catalog/category/offer_banner_mobile_1.png" alt="" srcset="">
+          </div><!-- /.col-md-6 -->
+        </div><!-- /.row -->
+      </div><!-- /.container -->
+    </section><!-- /.collections-grid collections-grid_masonry -->
+
+
+
+    
+    <section class="shop-main container d-flex">
+        <div class="shop-sidebar side-sticky bg-body" id="shopFilter">
+            <div class="aside-header d-flex d-lg-none align-items-center">
+              <h3 class="text-uppercase fs-7 mb-0">Filter By</h3>
+              <button class="btn-close-lg js-close-aside btn-close-aside ms-auto"></button>
+            </div><!-- /.aside-header -->
+    
+            <div class="pt-4 pt-lg-0"></div>
+    
+            <div class="accordion" id="brand-filters">
+              <div class="accordion-item mb-4">
+                <h5 class="accordion-header" id="accordion-heading-brand">
+                  <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-filter-brand" aria-expanded="true" aria-controls="accordion-filter-brand">
+                    Filter Gender
+                    <svg class="accordion-button__icon type2" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
+                      <g aria-hidden="true" stroke="none" fill-rule="evenodd">
+                        <path d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z"/>
+                      </g>
+                    </svg>
+                  </button>
+                </h5>
+                <div id="accordion-filter-brand" class="accordion-collapse collapse show border-0" aria-labelledby="accordion-heading-brand" data-bs-parent="#brand-filters">
+                  <form action="" method="get">
+                    <div class="multi-select accordion-body px-0 pb-0">
+                      {% if selected_gender %}
+                      <p>selected gender :</p>
+                      {% for s_gender  in selected_gender %}
+                      <p>{{s_gender}}</p>
+                      {% endfor %}
+                      {% endif %}
+                        <select class="d-none" multiple name="gender">
+                            {% for brand_name,name in GENDER_CHOICES %}
+                                <option value="{{ brand_name }}">{{ brand_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <ul class="multi-select__list list-unstyled">
+                            {% for brand_name, count in GENDER_CHOICES %}
+                            {% if brand_name not in selected_gender %}
+                                <li class="search-suggestion__item multi-select__item text-primary js-multi-select">
+                                    <span class="me-auto">{{ brand_name }}</span>
+                                    <span class="text-secondary">
+                                      {% if brand_name in selected_brands %} Selected {% endif %}
+                                    </span>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        <input type="submit" value="Filter" id="filter-btn">
+                    </div>
+                </form>
+                </div>
+              </div><!-- /.accordion-item -->
+            </div><!-- /.accordion -->
+    
+    
+    
+            <div class="accordion" id="brand-filters">
+              <div class="accordion-item mb-4">
+                <h5 class="accordion-header" id="accordion-heading-brand">
+                  <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button" data-bs-toggle="collapse" data-bs-target="#accordion-filter-brand" aria-expanded="true" aria-controls="accordion-filter-brand">
+                    Filter Brands
+                    <svg class="accordion-button__icon type2" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
+                      <g aria-hidden="true" stroke="none" fill-rule="evenodd">
+                        <path d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z"/>
+                      </g>
+                    </svg>
+                  </button>
+                </h5>
+                <div id="accordion-filter-brand" class="accordion-collapse collapse  border-0" aria-labelledby="accordion-heading-brand" data-bs-parent="#brand-filters">
+                  <form action="" method="get">
+                    <div class="multi-select accordion-body px-0 pb-0">
+                      {% if selected_gender %}
+                      <p>selected brands :</p>
+                      {% for s_brand  in selected_brands %}
+                      <p>{{s_brand}}     <input type="checkbox" checked></p>
+                      {% endfor %}
+                      {% endif %}
+                        <select class="d-none" multiple name="brand">
+                            {% for brand_name,name in BRAND_CHOICES %}
+                                <option value="{{ brand_name }}">{{ brand_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <ul class="multi-select__list list-unstyled">
+                            {% for brand_name, count in BRAND_CHOICES %}
+                            {% if brand_name not in selected_brands %}
+                                <li class="search-suggestion__item multi-select__item text-primary js-multi-select">
+                                    <span class="me-auto">{{ brand_name }}</span>
+                                    <span class="text-secondary">
+                                      {% if brand_name in selected_brands %} Selected {% endif %}
+                                    </span>
+                                </li>
+                                {% endif %}
+                            {% endfor %}
+                        </ul>
+                        <input type="submit" value="Filter" id="filter-btn">
+                    </div>
+                </form>
+                </div>
+              </div><!-- /.accordion-item -->
+            </div><!-- /.accordion -->
+    
+
+            <div class="accordion" id="style-filters">
+              <div class="accordion-item mb-4">
+                  <h5 class="accordion-header" id="accordion-heading-style">
+                      <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button"
+                              data-bs-toggle="collapse" data-bs-target="#accordion-filter-style" aria-expanded="true"
+                              aria-controls="accordion-filter-style">
+                          Filter Style
+                          <svg class="accordion-button__icon type2" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
+                              <g aria-hidden="true" stroke="none" fill-rule="evenodd">
+                                  <path
+                                      d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z"/>
+                              </g>
+                          </svg>
+                      </button>
+                  </h5>
+                  <div id="accordion-filter-style" class="accordion-collapse collapse border-0"
+                       aria-labelledby="accordion-heading-style" data-bs-parent="#style-filters">
+                      <form action="" method="get">
+                          <div class="multi-select accordion-body px-0 pb-0">
+                              {% if selected_styles %}
+                              <p>Selected Styles:</p>
+                              {% for style in selected_styles %}
+                              <p>{{ style }}</p>
+                              {% endfor %}
+                              {% endif %}
+                              <select class="d-none" multiple name="style">
+                                  {% for style_name, style_label in STYLE_CHOICES %}
+                                  <option value="{{ style_name }}">{{ style_label }}</option>
+                                  {% endfor %}
+                              </select>
+                              <ul class="multi-select__list list-unstyled">
+                                  {% for style_name, style_label in STYLE_CHOICES %}
+                                  {% if style_name not in selected_styles %}
+                                  <li class="search-suggestion__item multi-select__item text-primary js-multi-select">
+                                      <span class="me-auto">{{ style_label }}</span>
+                                      <span class="text-secondary">
+                                          {% if style_name in selected_styles %} Selected {% endif %}
+                                      </span>
+                                  </li>
+                                  {% endif %}
+                                  {% endfor %}
+                              </ul>
+                              <input type="submit" value="Filter" id="filter-btn">
+                          </div>
+                      </form>
+                  </div>
+              </div><!-- /.accordion-item -->
+          </div><!-- /.accordion -->
+          <div class="accordion" id="strap-material-filters">
+            <div class="accordion-item mb-4">
+                <h5 class="accordion-header" id="accordion-heading-strap-material">
+                    <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button"
+                            data-bs-toggle="collapse" data-bs-target="#accordion-filter-strap-material" aria-expanded="true"
+                            aria-controls="accordion-filter-strap-material">
+                        Filter Strap Material
+                        <svg class="accordion-button__icon type2" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
+                            <!-- Arrow SVG Icon -->
+                            <path d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z"/>
+                        </svg>
+                    </button>
+                </h5>
+                <div id="accordion-filter-strap-material" class="accordion-collapse collapse border-0"
+                     aria-labelledby="accordion-heading-strap-material" data-bs-parent="#strap-material-filters">
+                    <form action="" method="get">
+                        <div class="multi-select accordion-body px-0 pb-0">
+                            <!-- Display selected strap materials -->
+                            {% if selected_strap_materials %}
+                            <p>Selected Strap Materials:</p>
+                            {% for strap_material in selected_strap_materials %}
+                            <p>{{ strap_material }}</p>
+                            {% endfor %}
+                            {% endif %}
+                            <!-- Hidden select field for strap material -->
+                            <select class="d-none" multiple name="strap_material">
+                                <!-- Loop through strap material choices -->
+                                {% for strap_material_name, strap_material_label in STRAP_MATERIAL_CHOICES %}
+                                <option value="{{ strap_material_name }}">{{ strap_material_label }}</option>
+                                {% endfor %}
+                            </select>
+                            <!-- Display strap material choices -->
+                            <ul class="multi-select__list list-unstyled">
+                                {% for strap_material_name, strap_material_label in STRAP_MATERIAL_CHOICES %}
+                                <!-- Check if strap material is not selected -->
+                                {% if strap_material_name not in selected_strap_materials %}
+                                <li class="search-suggestion__item multi-select__item text-primary js-multi-select">
+                                    <span class="me-auto">{{ strap_material_label }}</span>
+                                    <span class="text-secondary">
+                                        {% if strap_material_name in selected_strap_materials %} Selected {% endif %}
+                                    </span>
+                                </li>
+                                {% endif %}
+                                {% endfor %}
+                            </ul>
+                            <!-- Submit button -->
+                            <input type="submit" value="Filter" id="filter-btn">
+                        </div>
+                    </form>
+                </div>
+            </div><!-- /.accordion-item -->
+        </div><!-- /.accordion -->
+        
+        
+        <div class="accordion" id="dial-type-filters">
+          <div class="accordion-item mb-4">
+              <h5 class="accordion-header" id="accordion-heading-dial-type">
+                  <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button"
+                          data-bs-toggle="collapse" data-bs-target="#accordion-filter-dial-type" aria-expanded="true"
+                          aria-controls="accordion-filter-dial-type">
+                      Filter Dial Type
+                      <svg class="accordion-button__icon type2" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
+                          <g aria-hidden="true" stroke="none" fill-rule="evenodd">
+                              <path
+                                  d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z"/>
+                          </g>
+                      </svg>
+                  </button>
+              </h5>
+              <div id="accordion-filter-dial-type" class="accordion-collapse collapse border-0"
+                   aria-labelledby="accordion-heading-dial-type" data-bs-parent="#dial-type-filters">
+                  <form action="" method="get">
+                      <div class="multi-select accordion-body px-0 pb-0">
+                          {% if selected_dial_types %}
+                          <p>Selected Dial Types:</p>
+                          {% for dial_type in selected_dial_types %}
+                          <p>{{ dial_type }}</p>
+                          {% endfor %}
+                          {% endif %}
+                          <select class="d-none" multiple name="dial_type">
+                              {% for dial_type_name, dial_type_label in DIAL_TYPE_CHOICES %}
+                              <option value="{{ dial_type_name }}">{{ dial_type_label }}</option>
+                              {% endfor %}
+                          </select>
+                          <ul class="multi-select__list list-unstyled">
+                              {% for dial_type_name, dial_type_label in DIAL_TYPE_CHOICES %}
+                              {% if dial_type_name not in selected_dial_types %}
+                              <li class="search-suggestion__item multi-select__item text-primary js-multi-select">
+                                  <span class="me-auto">{{ dial_type_label }}</span>
+                                  <span class="text-secondary">
+                                      {% if dial_type_name in selected_dial_types %} Selected {% endif %}
+                                  </span>
+                              </li>
+                              {% endif %}
+                              {% endfor %}
+                          </ul>
+                          <input type="submit" value="Filter" id="filter-btn">
+                      </div>
+                  </form>
+              </div>
+          </div><!-- /.accordion-item -->
+      </div><!-- /.accordion -->
+      
+      
+      <div class="accordion" id="dial-colour-filters">
+        <div class="accordion-item mb-4">
+            <h5 class="accordion-header" id="accordion-heading-dial-colour">
+                <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button"
+                        data-bs-toggle="collapse" data-bs-target="#accordion-filter-dial-colour" aria-expanded="true"
+                        aria-controls="accordion-filter-dial-colour">
+                    Filter Dial Colour
+                    <svg class="accordion-button__icon type2" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
+                        <!-- SVG Icon -->
+                        <g aria-hidden="true" stroke="none" fill-rule="evenodd">
+                            <path
+                                d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z"/>
+                        </g>
+                    </svg>
+                </button>
+            </h5>
+            <div id="accordion-filter-dial-colour" class="accordion-collapse collapse border-0"
+                 aria-labelledby="accordion-heading-dial-colour" data-bs-parent="#dial-colour-filters">
+                <form action="" method="get">
+                    <div class="multi-select accordion-body px-0 pb-0">
+                        {% if selected_dial_colours %}
+                        <p>Selected Dial Colours:</p>
+                        {% for dial_colour in selected_dial_colours %}
+                        <p>{{ dial_colour }}</p>
+                        {% endfor %}
+                        {% endif %}
+                        <select class="d-none" multiple name="dial_colour">
+                            {% for colour_code, colour_name in DIAL_COLOUR_CHOICES %}
+                            <option value="{{ colour_code }}">{{ colour_name }}</option>
+                            {% endfor %}
+                        </select>
+                        <ul class="multi-select__list list-unstyled">
+                            {% for colour_code, colour_name in DIAL_COLOUR_CHOICES %}
+                            {% if colour_code not in selected_dial_colours %}
+                            <li class="search-suggestion__item multi-select__item text-primary js-multi-select">
+                                <span class="me-auto">{{ colour_name }}</span>
+                                <span class="text-secondary">
+                                    {% if colour_code in selected_dial_colours %} Selected {% endif %}
+                                </span>
+                            </li>
+                            {% endif %}
+                            {% endfor %}
+                        </ul>
+                        <input type="submit" value="Filter" id="filter-btn">
+                    </div>
+                </form>
+            </div>
+        </div><!-- /.accordion-item -->
+    </div><!-- /.accordion -->
+    
+    <div class="accordion" id="dial-shape-filters">
+      <div class="accordion-item mb-4">
+          <h5 class="accordion-header" id="accordion-heading-dial-shape">
+              <button class="accordion-button p-0 border-0 fs-7 text-uppercase" type="button"
+                      data-bs-toggle="collapse" data-bs-target="#accordion-filter-dial-shape" aria-expanded="true"
+                      aria-controls="accordion-filter-dial-shape">
+                  Filter Dial Shape
+                  <svg class="accordion-button__icon type2" viewBox="0 0 10 6" xmlns="http://www.w3.org/2000/svg">
+                      <g aria-hidden="true" stroke="none" fill-rule="evenodd">
+                          <path
+                              d="M5.35668 0.159286C5.16235 -0.053094 4.83769 -0.0530941 4.64287 0.159286L0.147611 5.05963C-0.0492049 5.27473 -0.049205 5.62357 0.147611 5.83813C0.344427 6.05323 0.664108 6.05323 0.860924 5.83813L5 1.32706L9.13858 5.83867C9.33589 6.05378 9.65507 6.05378 9.85239 5.83867C10.0492 5.62357 10.0492 5.27473 9.85239 5.06018L5.35668 0.159286Z"/>
+                      </g>
+                  </svg>
+              </button>
+          </h5>
+          <div id="accordion-filter-dial-shape" class="accordion-collapse collapse border-0"
+               aria-labelledby="accordion-heading-dial-shape" data-bs-parent="#dial-shape-filters">
+              <form action="" method="get">
+                  <div class="multi-select accordion-body px-0 pb-0">
+                      <!-- Display selected dial shapes -->
+                      {% if selected_dial_shapes %}
+                          <p>Selected Dial Shapes:</p>
+                          {% for shape in selected_dial_shapes %}
+                              <p>{{ shape }}</p>
+                          {% endfor %}
+                      {% endif %}
+                      <!-- Hidden select to hold filter values -->
+                      <select class="d-none" multiple name="dial_shape">
+                          {% for shape_name, shape_label in DIAL_SHAPE_CHOICES %}
+                              <option value="{{ shape_name }}">{{ shape_label }}</option>
+                          {% endfor %}
+                      </select>
+                      <!-- List of selectable shapes -->
+                      <ul class="multi-select__list list-unstyled">
+                          {% for shape_name, shape_label in DIAL_SHAPE_CHOICES %}
+                              {% if shape_name not in selected_dial_shapes %}
+                                  <li class="search-suggestion__item multi-select__item text-primary js-multi-select">
+                                      <span class="me-auto">{{ shape_label }}</span>
+                                      <span class="text-secondary">
+                                          {% if shape_name in selected_dial_shapes %} Selected {% endif %}
+                                      </span>
+                                  </li>
+                              {% endif %}
+                          {% endfor %}
+                      </ul>
+                      <!-- Filter submit button -->
+                      <input type="submit" value="Filter" id="filter-btn">
+                  </div>
+              </form>
+          </div>
+      </div><!-- /.accordion-item -->
+  </div><!-- /.accordion -->
+                
+    
+          </div><!-- /.shop-sidebar -->
+    
+      <!-- /.shop-sidebar -->
+
+      <div class="shop-list flex-grow-1">
+        <div class="d-flex justify-content-between mb-4 pb-md-2">
+          <div class="breadcrumb mb-0 d-none d-md-block flex-grow-1">
+            <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium" >Home</a>
+            <span class="breadcrumb-separator menu-link fw-medium ps-1 pe-1">/</span>
+            <a href="#" class="menu-link menu-link_us-s text-uppercase fw-medium" >The Shop</a>
+          </div><!-- /.breadcrumb -->
+
+          <div class="shop-acs d-flex align-items-center justify-content-between justify-content-md-end flex-grow-1">
+            <select class="shop-acs__select form-select w-auto border-0 py-0 order-1 order-md-0" aria-label="Sort Items" name="total-number">
+              <option selected>Default Sorting</option>
+              <option value="1">Featured</option>
+              <option value="2">Best selling</option>
+              <option value="3">Alphabetically, A-Z</option>
+              <option value="3">Alphabetically, Z-A</option>
+              <option value="3">Price, low to high</option>
+              <option value="3">Price, high to low</option>
+              <option value="3">Date, old to new</option>
+              <option value="3">Date, new to old</option>
+            </select>
+
+            <div class="shop-asc__seprator mx-3 bg-light d-none d-md-block order-md-0"></div>
+
+            <div class="col-size align-items-center order-1 d-none d-lg-flex">
+              <span class="text-uppercase fw-medium me-2">View</span>
+              <button class="btn-link fw-medium me-2 js-cols-size" data-target="products-grid" data-cols="2">2</button>
+              <button class="btn-link fw-medium me-2 js-cols-size" data-target="products-grid" data-cols="3">3</button>
+              <button class="btn-link fw-medium js-cols-size" data-target="products-grid"  data-cols="4">4</button>
+            </div><!-- /.col-size -->
+
+            <div class="shop-filter d-flex align-items-center order-0 order-md-3 d-lg-none">
+              <button class="btn-link btn-link_f d-flex align-items-center ps-0 js-open-aside" data-aside="shopFilter">
+                <svg class="d-inline-block align-middle me-2" width="14" height="10" viewBox="0 0 14 10" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_filter" /></svg>
+              <span class="text-uppercase fw-medium d-inline-block align-middle">Filter</span>
+              </button>
+            </div><!-- /.col-size d-flex align-items-center ms-auto ms-md-3 -->
+          </div><!-- /.shop-acs -->
+        </div><!-- /.d-flex justify-content-between -->
+
+        <div class="products-grid row row-cols-2 row-cols-md-3" id="products-grid" >
+        {% for product in products %}
+          <div class="product-card-wrapper">
+            <div class="product-card mb-3 mb-md-4 mb-xxl-5">
+              <div class="pc__img-wrapper">
+                <div class="swiper-container background-img js-swiper-slider" data-settings='{"resizeObserver": true}'>
+                  <div class="swiper-wrapper">
+                    <div class="swiper-slide">
+                      <a href="{% url 'watch_detail' watch_id=product.id watch_name=product.watch_name %}"><img loading="lazy" src="{{product.watch_thumbnail.url}}" width="330" height="400" alt="Cropped Faux leather Jacket" class="pc__img"></a>
+                    </div><!-- /.pc__img-wrapper -->
+                    <div class="swiper-slide">
+                      <a href="{% url 'watch_detail' watch_id=product.id watch_name=product.watch_name %}"><img loading="lazy" src="{{product.watch_thumbnail.url}}" width="330" height="400" alt="Cropped Faux leather Jacket" class="pc__img"></a>
+                    </div><!-- /.pc__img-wrapper -->
+                  </div>
+                </div>
+                <a href="{% url 'addCart' product.id %}" class="pc__atc btn anim_appear-bottom btn position-absolute border-0 text-uppercase" title="Add To Cart">Add To Cart</a>
+              </div>
+
+              <div class="pc__info position-relative">
+                <p class="pc__category">{{product.dial_type}}|{{product.dial_shape}}|{{product.style}}|{{product.brands}}</p>
+                <h6 class="pc__title"><a href="{% url 'watch_detail' watch_id=product.id watch_name=product.watch_name %}">{{product.watch_name}}</a></h6>
+                <div class="product-card__price d-flex">
+                  <span class="money price">${{product.actual_price}}</span>
+                </div>
+
+                <a href="{% url 'add_to_wishlist' product.id %}" class="pc__btn-wl position-absolute top-0 end-0 bg-transparent border-0 js-add-wishlist" title="Add To Wishlist">
+                  <svg width="16" height="16" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg"><use href="#icon_heart" /></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+
+        </div><!-- /.products-grid row -->
+      <!-- Pagination -->
+      {% if paginator.num_pages > 1 %}
+      <nav class="shop-pages d-flex justify-content-between mt-3" aria-label="Page navigation">
+          {% if products.has_previous %}
+          <a href="?page={{ products.previous_page_number }}" class="btn-link d-inline-flex align-items-center">
+              <svg class="me-1" width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg">
+                  <use href="#icon_prev_sm" />
+              </svg>
+              <span class="fw-medium">PREV</span>
+          </a>
+          {% endif %}
+          <ul class="pagination mb-0">
+              {% for num in paginator.page_range %}
+              <li class="page-item {% if products.number == num %}active{% endif %}">
+                  <a class="btn-link px-1 mx-2" href="?page={{ num }}">{{ num }}</a>
+              </li>
+              {% endfor %}
+          </ul>
+          {% if products.has_next %}
+          <a href="?page={{ products.next_page_number }}" class="btn-link d-inline-flex align-items-center">
+              <span class="fw-medium me-1">NEXT</span>
+              <svg width="7" height="11" viewBox="0 0 7 11" xmlns="http://www.w3.org/2000/svg">
+                  <use href="#icon_next_sm" />
+              </svg>
+          </a>
+          {% endif %}
+      </nav>
+      {% endif %}
+      <!-- End Pagination -->
+
+      </div>
+    </section><!-- /.shop-main container -->
+
+  </main>
+
+  <div class="mb-5 pb-xl-5"></div>
+
+  {% endblock main %}
