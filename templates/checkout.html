@@ -100,6 +100,7 @@
                 <div class="pay-btn">
                 {% if payment %}
                 <form action="{% url 'payment_done' %}" method="POST">
+                  {% csrf_token %}
                   <script
                     src="https://checkout.razorpay.com/v1/checkout.js"
                     data-key="rzp_test_wcSyrPoEa0dNYb" 

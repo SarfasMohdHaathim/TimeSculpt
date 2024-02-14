@@ -1,19 +1,126 @@
-from django.shortcuts import get_object_or_404,redirect,render
+# Django imports
+from django.shortcuts import (
+    get_object_or_404, redirect, render
+)
 from django.views.generic import TemplateView
-from .models import *
-from django.db.models import Q
-from django.contrib.auth import logout
+from django.db.models import Q, Max
+from django.contrib.auth import (
+    logout, authenticate, login
+)
 from django.views import View
 from django.contrib import messages
 from django.conf import settings
-import razorpay
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.views.decorators.http import require_POST
-from datetime import  timedelta
-from django.contrib.auth import authenticate, login
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
-from django.db.models import Max
 
+import razorpay
+from rest_framework.decorators import api_view
+from rest_framework.response import Response
+from rest_framework import status
+from datetime import  timedelta
+
+from .models import *
+from api.models import User
+from .serializers import WatchSerializer, WatchImageSerializer ,OrderPlacedSerializer,UserSerializer
+from rest_framework.views import APIView
+
+
+@api_view(['POST'])
+def create_watch(request, format=None):
+    if request.method == 'POST':
+        serializer = WatchSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+@api_view(['GET'])
+def list_watches(request, format=None):
+    if request.method == 'GET':
+        watches = Watch.objects.all()
+        serialized_data = []
+        for watch in watches:
+            actual_price = watch.actual_price() 
+            serialized_watch = WatchSerializer(watch).data
+            serialized_watch['actual_price'] = actual_price  
+            serialized_data.append(serialized_watch)
+        return Response(serialized_data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def list_orders(request, format=None):
+    if request.method == 'GET':
+        orders = OrderPlaced.objects.all()
+        serialized_orders = OrderPlacedSerializer(orders, many=True)
+        return Response(serialized_orders.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def list_users(request, format=None):
+    if request.method == 'GET':
+        orders = User.objects.all()
+        serialized_user = UserSerializer(orders, many=True)
+        return Response(serialized_user.data, status=status.HTTP_200_OK)
+
+@api_view(['DELETE'])
+def delete_watch(request, pk, format=None):
+    watch = get_object_or_404(Watch, pk=pk)
+    if request.method == 'DELETE':
+        watch.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+def watch_detail(request, pk, format=None):
+    watch = get_object_or_404(Watch, pk=pk)
+    if request.method == 'GET':
+        serialized_data = []
+        serialized_watch = WatchSerializer(watch).data
+        actual_price = watch.actual_price() 
+        serialized_watch['actual_price'] = actual_price  
+        serialized_data.append(serialized_watch)
+        return Response(serialized_watch, status=status.HTTP_200_OK)
+    
+@api_view(['PUT', 'PATCH'])
+def edit_watch(request, pk, format=None):
+    watch = get_object_or_404(Watch, pk=pk)
+    if request.method == 'PUT' or request.method == 'PATCH':
+        print('===============================')
+        serializer = WatchSerializer(watch, data=request.data, partial=True)  
+        print('===============================',serializer.is_valid())
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+
+class WatchImageCreateAPIView(APIView):
+    def post(self, request, format=None):
+        serializer = WatchImageSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class WatchImageDeleteAPIView(APIView):
+    def delete(self, request, pk, format=None):
+        try:
+            watch_image = WatchImage.objects.get(pk=pk)
+        except WatchImage.DoesNotExist:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        watch_image.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+    
+@api_view(['GET'])
+def watch_image_list(request, pk, format=None):
+    if request.method == 'GET':
+        watch = Watch.objects.get(id=pk)
+        watch_images = WatchImage.objects.filter(watch_name=watch)
+        serializer = WatchImageSerializer(watch_images, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+    else:
+        return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED)
+    
 
 class HomeView(TemplateView):
     template_name = 'a.html'
@@ -152,22 +259,13 @@ class AddToCartView(LoginRequiredMixin, View):
 class CartView(LoginRequiredMixin,TemplateView):
     template_name = 'cart.html'
     login_url = '/userlogin/'
-    def get_famount(self, cart):
-        famount = 0
-        pamount = 0
-        damount = 0
-        for c in cart:
-            pamount += c.watch_name.price
-            famount +=1
-            damount += c.watch_name.discounted_price()
-        return famount, pamount, damount
-
     def post(self, request, *args, **kwargs):
         user = request.user
         cart = Cart.objects.filter(user=user)
         famount = 0
         for c in cart:
-            famount +=1
+            print(c.watch_name.actual_price(),'============')
+            famount +=c.watch_name.price
         razoramount = int(famount * 100)
         client = razorpay.Client(auth=(settings.RAZOR_KEY_ID, settings.RAZOR_KEY_SECRET))
         data = {'amount': razoramount, "currency": "INR", "receipt": "order_rcptid_12"}
@@ -190,7 +288,14 @@ class CartView(LoginRequiredMixin,TemplateView):
             current_user = request.user
             context['cart'] = Cart.objects.filter(user=current_user)
             cart = Cart.objects.filter(user=current_user)
-            famount, pamount, damount = get_famount(cart)
+            famount = 0
+            pamount = 0
+            damount = 0
+            for c in cart:
+                pamount += c.watch_name.price
+                famount +=c.watch_name.actual_price()
+                damount += c.watch_name.discounted_price()
+            
             context['famount'] = famount
             context['pamount'] = pamount
             context['damount'] = damount
@@ -204,18 +309,25 @@ class CartView(LoginRequiredMixin,TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        current_user = request.user
+        current_user = self.request.user
         context['cart'] = Cart.objects.filter(user=current_user)
         cart = Cart.objects.filter(user=current_user)
-        famount, pamount, damount = get_famount(cart)
+        famount = 0
+        pamount = 0
+        damount = 0
+        for c in cart:
+            pamount += c.watch_name.price
+            famount +=c.watch_name.actual_price()
+            damount += c.watch_name.discounted_price()
+        
         context['famount'] = famount
         context['pamount'] = pamount
         context['damount'] = damount
         context['current_user'] = current_user
         print(famount)
-        address_exists =Address.objects.filter(user=request.user).exists()
+        address_exists =Address.objects.filter(user=self.request.user).exists()
         if address_exists :
-            context['address'] = Address.objects.get(user=request.user)
+            context['address'] = Address.objects.get(user=self.request.user)
         return context
 
 
@@ -230,26 +342,25 @@ class RegisterView(TemplateView):
 
 
 
-
 class CheckOut(LoginRequiredMixin,TemplateView):
     template_name = 'checkout.html'
     login_url = '/userlogin/'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if request.user.is_authenticated:
-            context['first_name'] = request.user.first_name
-            context['last_name'] = request.user.last_name
-            address_exists =Address.objects.filter(user=request.user).exists()
+        if self.request.user.is_authenticated:
+            context['first_name'] = self.request.user.first_name
+            context['last_name'] = self.request.user.last_name
+            address_exists =Address.objects.filter(user=self.request.user).exists()
             if address_exists :
-                context['address'] = Address.objects.get(user=request.user)
-                current_user = request.user
+                context['address'] = Address.objects.get(user=self.request.user)
+                current_user = self.request.user
                 context['cart'] = Cart.objects.filter(user=current_user)
                 cart = Cart.objects.filter(user=current_user)
                 pamount,famount,damount=0,0,0
                 for c in cart:
                     pamount += c.watch_name.price
-                    famount +=1
+                    famount +=c.watch_name.actual_price()
                     damount += c.watch_name.discounted_price()
                 print(context)
                 context['famount'] = famount
@@ -290,13 +401,13 @@ class ShippingAddress(LoginRequiredMixin,TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        if request.user.is_authenticated:
-            context['first_name'] = request.user.first_name
-            context['last_name'] = request.user.last_name
-            address_exists =Address.objects.filter(user=request.user).exists()
+        if self.request.user.is_authenticated:
+            context['first_name'] = self.request.user.first_name
+            context['last_name'] = self.request.user.last_name
+            address_exists =Address.objects.filter(user=self.request.user).exists()
             if address_exists :
-                context['address'] = Address.objects.get(user=request.user)
-                current_user = request.user
+                context['address'] = Address.objects.get(user=self.request.user)
+                current_user = self.request.user
                 context['cart'] = Cart.objects.filter(user=current_user)
                 cart = Cart.objects.filter(user=current_user)
                 pamount,famount,damount=0,0,0
@@ -420,8 +531,9 @@ def register(request):
                 user = User.objects.create_user(username=username,first_name=f_name,last_name=l_name,
                                                 email=email, password=password)
                 user.save()
-
+                print('authentication take place========================================')
                 user = authenticate(request, username=username, password=password)
+                print('no authentication========================================')
                 login(request, user)
                 messages.success(request, 'You have successfully registered and logged in.')
                 return redirect('home')
@@ -474,9 +586,6 @@ def account_address(request):
     return render(request, 'account_address.html', context)
 
 
-
-
-
 def wishlist(request):
     user=request.user
     wishlist=Wishlist.objects.filter(user=user)
@@ -484,17 +593,12 @@ def wishlist(request):
     return render(request,'wishlist.html',context)
 
 
-
-
-
 def brands(request):
     return render(request,'brand.html')
 
 
-
 def stores(request):
     return render(request,'store.html')
-
 
 def addtowishlist(request,pk):
     user=request.user
@@ -503,13 +607,10 @@ def addtowishlist(request,pk):
     return redirect('wishlist')
 
 
-
 def removewishlist(request,pk):
     wishlist=Wishlist.objects.get(id=pk)
     wishlist.delete()
     return redirect('wishlist')
-
-
 
 
 def offers(request):

@@ -13,7 +13,7 @@ def base_common(request):
             cart_count=cart_item.count()
             famount=0
             for c in cart_item:
-                famount +=1
+                famount +=c.watch_name.actual_price()
         except Cart.DoesNotExist:
             pass
 

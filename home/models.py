@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.models import User
+from api.models import User
 
 
 class Watch(models.Model):
@@ -96,6 +96,13 @@ class Watch(models.Model):
     def __str__(self):
         return self.watch_name
 
+class WatchImage(models.Model):
+    watch_name = models.ForeignKey(Watch, on_delete=models.SET_NULL,null=True)
+    watch_image = models.ImageField(upload_to='watch_image/',blank=True,null=True)
+    def __str__(self):
+        return self.watch_name.watch_name
+    
+
 
 
 class Cart(models.Model):
@@ -140,11 +147,3 @@ class Wishlist(models.Model):
     def __str__(self):
         return self.watch_name.watch_name
     
-
-
-
-class WatchImage(models.Model):
-    watch_name = models.ForeignKey(Watch, on_delete=models.CASCADE,null=True)
-    watch_image = models.ImageField(upload_to='watch_image/',blank=True,null=True)
-    def __str__(self):
-        return self.watch_name.watch_name
