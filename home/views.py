@@ -57,8 +57,15 @@ def list_orders(request, format=None):
 @api_view(['GET'])
 def list_users(request, format=None):
     if request.method == 'GET':
-        orders = User.objects.all()
-        serialized_user = UserSerializer(orders, many=True)
+        users = User.objects.filter(is_staff=False)
+        serialized_user = UserSerializer(users, many=True)
+        return Response(serialized_user.data, status=status.HTTP_200_OK)
+
+@api_view(['GET'])
+def list_staffs(request, format=None):
+    if request.method == 'GET':
+        users = User.objects.filter(is_staff=True)
+        serialized_user = UserSerializer(users, many=True)
         return Response(serialized_user.data, status=status.HTTP_200_OK)
 
 @api_view(['DELETE'])
