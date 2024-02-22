@@ -71,6 +71,14 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = ['id', 'username','email', 'address']
 
+class TransactionSerializer(serializers.ModelSerializer):
+    user = UserSerializer() 
+
+    class Meta:
+        model = Payment
+        fields = [ 'user','amount', 'paid']
+
+
 class OrderPlacedSerializer(serializers.ModelSerializer):
     payment = PaymentSerializer()
     user = UserSerializer()

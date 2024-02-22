@@ -19,10 +19,11 @@ from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
 from datetime import  timedelta
+from django.db.models import Sum
 
 from .models import *
 from api.models import User
-from .serializers import WatchSerializer, WatchImageSerializer ,OrderPlacedSerializer,UserSerializer
+from .serializers import WatchSerializer, WatchImageSerializer ,OrderPlacedSerializer,UserSerializer,TransactionSerializer
 from rest_framework.views import APIView
 
 
@@ -52,7 +53,12 @@ def list_orders(request, format=None):
     if request.method == 'GET':
         orders = OrderPlaced.objects.all()
         serialized_orders = OrderPlacedSerializer(orders, many=True)
-        return Response(serialized_orders.data, status=status.HTTP_200_OK)
+        order_count = orders.count()
+        response_data = {
+            'orders': serialized_orders.data,
+            'order_count': order_count
+        }
+        return Response(response_data, status=status.HTTP_200_OK)
 
 @api_view(['GET'])
 def list_users(request, format=None):
@@ -68,6 +74,20 @@ def list_staffs(request, format=None):
         serialized_user = UserSerializer(users, many=True)
         return Response(serialized_user.data, status=status.HTTP_200_OK)
 
+@api_view(['GET'])
+def list_transaction(request, format=None):
+    if request.method == 'GET':
+
+        transactions = Payment.objects.filter(paid=True).order_by('-id')
+        transaction_all = Payment.objects.all().order_by('-id')
+        total_amount_paid = transactions.aggregate(total_amount_paid=Sum('amount'))['total_amount_paid']
+        serialized_transactions = TransactionSerializer(transaction_all, many=True)
+        response_data = {
+            'transactions': serialized_transactions.data,
+            'total_amount_paid': total_amount_paid
+        }
+
+        return Response(response_data, status=status.HTTP_200_OK)
 @api_view(['DELETE'])
 def delete_watch(request, pk, format=None):
     watch = get_object_or_404(Watch, pk=pk)

@@ -124,7 +124,7 @@ class Address(models.Model):
 
 
 class Payment(models.Model):
-    user=models.ForeignKey(User ,on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='payments')
     amount=models.FloatField()
     razorpay_order_id=models.CharField(max_length=100,blank=True,null=True)
     razorpay_payment_status=models.CharField(max_length=100,blank=True,null=True)
